@@ -56,6 +56,7 @@ docs = [
 Homepage = "https://github.com/QuantumArtificer/petal2d"
 Documentation = "https://quantumartificer.github.io/petal2d/"
 Repository = "https://github.com/QuantumArtificer/petal2d"
+Archive = "https://doi.org/10.5281/zenodo.22715741"
 Issues = "https://github.com/QuantumArtificer/petal2d/issues"
 
 [tool.setuptools.dynamic]
