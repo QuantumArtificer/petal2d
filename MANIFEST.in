@@ -11,6 +11,7 @@ recursive-include validation *.py *.md
 recursive-include benchmarks *.py *.md
 recursive-include tests *.py
 recursive-include docs *.md *.rst *.py Makefile *.png *.svg *.css
+prune docs/_build
 prune validation/results/figures
 prune benchmarks/results/figures
 global-exclude __pycache__ *.py[cod]
