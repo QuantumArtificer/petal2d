@@ -1,5 +1,5 @@
 ---
-title: "Orbitalspectrum: Adaptive polar Fourier decomposition of two-dimensional scalar fields"
+title: "PETAL2D: Adaptive polar angular-harmonic decomposition of two-dimensional localized fields"
 tags:
   - Python
   - Fourier analysis
@@ -10,7 +10,7 @@ authors:
     orcid: 0000-0000-0000-0000   # REPLACE
     affiliation: 1
 affiliations:
-  - name: Department of Physics, [Your Institution]
+  - name: Departamento de Física Química,
     index: 1
 date: 2026-01-01
 bibliography: paper.bib
@@ -18,15 +18,15 @@ bibliography: paper.bib
 
 # Summary
 
-Orbitalspectrum is a Python package for adaptive polar Fourier decomposition of two-dimensional scalar fields defined on Cartesian grids. The library performs efficient Cartesian-to-polar interpolation, angular Fourier decomposition using fast Fourier transforms (FFT), harmonic power analysis, and error-controlled truncation of angular modes. The implementation is optimized for computational efficiency and exhibits near-linear scaling in both radial and angular resolution. Orbitalspectrum is designed to support interaction integral evaluation in two-dimensional systems but is general-purpose and applicable to any smooth scalar field defined on a plane in physics, engineering, and applied mathematics. The package includes benchmarking utilities, profiling tools, and reproducible scaling analyses.
+Polar Expansion Toolkit for Atomic Orbitals and Localized Fields in 2D (PETAL2D) is a Python package for adaptive polar Fourier decomposition of two-dimensional scalar fields defined on Cartesian grids. The library performs efficient Cartesian-to-polar interpolation, angular Fourier decomposition using fast Fourier transforms (FFT), harmonic power analysis, and error-controlled truncation of angular modes. The implementation is optimized for computational efficiency and exhibits near-linear scaling in both radial and angular resolution. PETAL2D is designed to support interaction integral evaluation in two-dimensional systems but is general-purpose and applicable to any smooth scalar field defined on a plane in physics, engineering, and applied mathematics. The package includes benchmarking utilities, profiling tools, and reproducible scaling analyses.
 
 # Statement of Need
 
-Angular harmonic spectral decomposition is a powerful tool in condensed matter physics, quantum chemistry, electromagnetism as electrostatic interaction kernels - such as the Coulomb-like and screened potentials - are often radially symmetric. Reformulating problems in a basis of hyperspherical coordinates (in the general case), such as atomic orbital expansion, multipole expansions. can provide a significant increase in numerical accuracy by simplifying the integration through the separation of angular and radial degrees of freedom. However, while FFT libraries are widely available, there is currently no lightweight, open-source, dedicated Python package that provides analytical tools for the growing field of two-dimensional physics. These include cartesian-to-polar interpolation tailored for spectral analysis, adaptive truncation and ranking of the harmonics based on spectral power analysis, error-controlled reconstruction diagnostics, and benchmark-backed performance characterization. Orbitalspectrum addresses this gap by providing a modular and optimized framework for polar Fourier decomposition. The package emphasizes reproducibility, computational efficiency, and practical integration into larger scientific workflows through a clean, reusable API.
+Angular harmonic spectral decomposition is a powerful tool in condensed matter physics, quantum chemistry, electromagnetism as electrostatic interaction kernels - such as the Coulomb-like and screened potentials - are often radially symmetric. Reformulating problems in a basis of hyperspherical coordinates (in the general case), such as atomic orbital expansion, multipole expansions. can provide a significant increase in numerical accuracy by simplifying the integration through the separation of angular and radial degrees of freedom. However, while FFT libraries are widely available, there is currently no lightweight, open-source, dedicated Python package that provides analytical tools for the growing field of two-dimensional physics. These include cartesian-to-polar interpolation tailored for spectral analysis, adaptive truncation and ranking of the harmonics based on spectral power analysis, error-controlled reconstruction diagnostics, and benchmark-backed performance characterization. PETAL2D addresses this gap by providing a modular and optimized framework for polar Fourier decomposition. The package emphasizes reproducibility, computational efficiency, and practical integration into larger scientific workflows through a clean, reusable API.
 
 # Functionality
 
-PolarSpectral provides:
+PETAL2D provides:
 
 - Cartesian-to-polar interpolation of scalar fields defined on uniform grids,
 - Angular Fourier decomposition via FFT,
@@ -58,7 +58,6 @@ The package is implemented in Python using NumPy and SciPy. Key implementation f
 - Single-pass cumulative radial integration across all harmonics,
 - Removal of redundant radial integration passes,
 - Memory-efficient array layout to reduce overhead,
-- Profiling-guided optimization using `cProfile`.
 
 The overall computational complexity scales as
 
@@ -72,13 +71,13 @@ where \( N_r \) and \( N_\theta \) are radial and angular grid resolutions.
 
 Benchmarking demonstrates near-linear scaling in both radial and angular resolution. Log–log fits yield scaling exponents close to unity in practical regimes, consistent with theoretical expectations.
 
-Profiling indicates that runtime is dominated by Cartesian-to-polar interpolation for large grids, placing the algorithm in a memory-bandwidth-limited regime. The angular decomposition and radial integration stages exhibit efficient vectorized behavior with minimal Python overhead.
+Profiling indicates that runtime is dominated by Cartesian-to-polar interpolation for large sampled grids. The angular decomposition and radial integration stages exhibit efficient vectorized behavior with minimal Python overhead. Establishing whether a particular workload is hardware-memory-bandwidth limited requires hardware-level performance counters and is not inferred from peak resident memory.
 
 Performance benchmarks and profiling scripts are included in the repository to ensure reproducibility.
 
 # Availability
 
-- Source code: https://github.com/yourusername/polarspectral  <!-- REPLACE -->
+- Source code: https://github.com/QuantumArtificer/petal2d  <!-- repository will be renamed to PETAL2D -->
 - License: MIT
 - Archived DOI: 10.5281/zenodo.xxxxxxx  <!-- REPLACE AFTER ARCHIVING -->
 

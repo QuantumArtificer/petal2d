@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use PETAL2D in research, please cite the archived software release."
+title: "PETAL2D: Polar Expansion Toolkit for Atomic Orbitals and Localized Fields in 2D"
+type: software
+authors:
+  - family-names: "Santacruz"
+    given-names: "Alex"
+repository-code: "https://github.com/QuantumArtificer/petal2d"
+license: MIT
+version: 0.1.0

@@ -1,38 +1,69 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=77.0.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "gasp2d"
-version = "0.1.0"
-description = "Generalized Atomic-orbital Spectral Projection in 2D: A library for spectral decomposition and projection of 2D fields onto a basis of polar angular momentum harmonics."
+name = "petal2d"
+dynamic = ["version"]
+description = "Polar Expansion Toolkit for Atomic Orbitals and Localized Fields in 2D."
 readme = "README.md"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.10"
-
 authors = [
   { name = "Alex Santacruz" },
   { name = "2DQMAT Research @ IF-UNAM" }
 ]
-
 keywords = [
-  "circular-harmonics",
+  "angular-harmonics",
   "polar-coordinates",
-  "generalized-orbitals",
-  "two-dimensions",
-  "angular-momentum"
+  "atomic-orbitals",
+  "localized-fields",
+  "two-dimensional",
+  "angular-momentum",
+  "spectral-analysis"
 ]
-
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Physics"
+]
 dependencies = [
   "numpy>=1.23",
   "scipy>=1.9",
   "matplotlib>=3.6"
 ]
 
+[project.optional-dependencies]
+test = ["pytest>=8"]
+benchmark = ["psutil>=5.9"]
+release = ["build>=1.2", "twine>=5"]
+docs = [
+  "sphinx>=7",
+  "pydata-sphinx-theme>=0.15",
+  "myst-parser>=3",
+  "sphinx-copybutton>=0.5",
+  "sphinx-design>=0.6"
+]
+
 [project.urls]
-Homepage = "https://github.com/QuantumArtificer/gasp2d"
-Repository = "https://github.com/QuantumArtificer/gasp2d"
-Issues = "https://github.com/QuantumArtificer/gasp2d/issues"
+Homepage = "https://github.com/QuantumArtificer/petal2d"
+Repository = "https://github.com/QuantumArtificer/petal2d"
+Issues = "https://github.com/QuantumArtificer/petal2d/issues"
+
+[tool.setuptools.dynamic]
+version = { attr = "petal2d._version.__version__" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra"

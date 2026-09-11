@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build / environments
+build/
+dist/
+.venv/
+venv/
+
+# Documentation build
+docs/_build/
+
+# Generated validation / benchmark outputs
+validation/results/
+benchmarks/results/
+
+# PETAL2D local development artifacts
+.petal2d_backup_*/
+petal2d_*analysis*/
+petal2d_*analysis*.zip
+petal2d_*diagnostic*.json
+petal2d_*diagnostic*.py
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Local PETAL2D updater backups
+.petal2d_plot_backup_*/
+.petal2d_update_backups/
