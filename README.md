@@ -1,254 +1,164 @@
 # PETAL2D
 
-**PETAL2D** — **P**olar **E**xpansion **T**oolkit for **A**tomic Orbitals and **L**ocalized Fields in **2D** — decomposes localized two-dimensional scalar fields into angular Fourier harmonics while retaining their radial structure.
+[![tests](https://github.com/QuantumArtificer/petal2d/actions/workflows/tests.yml/badge.svg)](https://github.com/QuantumArtificer/petal2d/actions/workflows/tests.yml)
+[![Documentation](https://github.com/QuantumArtificer/petal2d/actions/workflows/docs.yml/badge.svg)](https://github.com/QuantumArtificer/petal2d/actions/workflows/docs.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-```text
-2D field f(x,y)
-      ↓ choose/estimate origin
-polar field f(r,θ)
-      ↓ angular FFT at every r
-radial harmonics ρₘ(r)
-      ↓ Parseval-weighted power ranking
-interpretable spectrum + controlled reconstruction
-```
+PETAL2D (Polar Expansion Toolkit for Atomic Orbitals and Localized Fields in 2D) decomposes localized two-dimensional real or complex scalar fields into polar angular harmonics while retaining their radial structure.
 
-For
+For a field written as
 
 $$
-f(r,\theta)=\sum_m\rho_m(r)e^{im\theta},
+f(r,\theta)=\sum_{m\in\mathbb Z}\rho_m(r)e^{im\theta},
 $$
 
-PETAL2D computes the radial harmonic profiles $\rho_m(r)$, their polar-area-weighted powers
+PETAL2D computes the radial profiles $\rho_m(r)$ and their polar-area-weighted powers
 
 $$
-P_m=\int|\rho_m(r)|^2r\,dr,
+P_m=\int_0^{r_{\max}} |\rho_m(r)|^2 r\,dr.
 $$
 
-and an adaptive reconstruction with an exact discrete Parseval error certificate.
-
-## Why PETAL2D?
-
-A Cartesian 2D FFT decomposes a field into plane waves. PETAL2D answers a different question: **what angular structure lives around a chosen localization center, and where does each angular channel live radially?**
-
-That makes the representation natural for localized states whose shape is better described as $s$-, $p$-, $d$-, vortex-, or crystal-field-like than as a collection of Cartesian plane waves.
-
-### Highlights
-
-- analytic callables or sampled Cartesian arrays;
-- automatic $L^2$ power-centroid origin or an explicit physical center;
-- direct callable evaluation on the polar grid;
-- cubic or linear interpolation for sampled arrays;
-- complete discrete angular spectrum plus adaptive retained spectrum;
-- real-valued adaptive truncation that preserves $(+m,-m)$ conjugate pairs;
-- exact Parseval-based reconstruction-error prediction for the computed spectrum;
-- public reconstruction of retained, complete, or user-selected harmonics;
-- angular Nyquist and aliasing diagnostics;
-- `domain_consistency` to quantify whether the polar disk captures the Cartesian-domain field weight;
-- explicit radial power-support, amplitude-support, and final `cutoff_radius` diagnostics;
-- publication-oriented plotting, mathematical tests, JSON validation, and reproducible benchmarks.
+The angular channels can then be ranked by power and used to construct controlled reconstructions. PETAL2D also reports the radial extent of retained channels, angular sampling limits, domain coverage, and reconstruction errors.
 
 ## Installation
 
-From PyPI after the first release:
+Install a development checkout with
 
 ```bash
-python -m pip install petal2d
+git clone https://github.com/QuantumArtificer/petal2d.git
+cd petal2d
+python -m pip install -e .
 ```
 
-For development:
+For tests and documentation:
 
 ```bash
 python -m pip install -e ".[test,docs]"
 ```
 
-## 60-second start
+PETAL2D requires Python 3.10 or newer, NumPy 1.23 or newer, SciPy 1.9 or newer, and Matplotlib 3.6 or newer.
+
+## Quick start
 
 ```python
 import numpy as np
 from petal2d import PolarDecomposition
 
-x = np.linspace(-6, 6, 161)
-y = np.linspace(-6, 6, 161)
+x = np.linspace(-6.0, 6.0, 161)
+y = np.linspace(-6.0, 6.0, 161)
 
-def field(x, y):
-    return x * np.exp(-0.5 * (x**2 + y**2))   # p_x-like orbital
+def px(x, y):
+    return x * np.exp(-0.5 * (x**2 + y**2))
 
-dec = PolarDecomposition(field, x, y, recon_err_tol=0.1)
+dec = PolarDecomposition(
+    px,
+    x,
+    y,
+    Nr=160,
+    Ntheta=256,
+    recon_err_tol=1e-8,
+)
 
-dec.print_spectrum()
-print("origin:", dec.origin)
-print("selected pairs:", dec.selected_pairs)
-print("domain consistency:", dec.domain_consistency)
-print("reconstruction error (%):", dec.recon_error_measured)
+print(dec.selected_pairs)
+print(dec.m_sorted.tolist())
+print(f"{dec.domain_consistency:.8f}")
+print(f"{dec.recon_error_measured:.6g}")
 ```
 
-For a real $p_x$-like field, PETAL2D identifies the conjugate pair $m=\pm1$ and keeps the adaptive reconstruction real.
-
-Plot the radial profiles, power-ranked retained harmonics, and reconstruction:
-
-```python
-import matplotlib.pyplot as plt
-
-dec.plot_harmonics_with_hist("p_x-like orbital")
-dec.plot_original_vs_reconstructions("p_x-like orbital")
-plt.show()
+```text
+[(1, -1)]
+[1, -1]
+1.00000003
+2.70394e-14
 ```
 
-## Inputs
+The real $p_x$-like field contains equal $m=+1$ and $m=-1$ components. PETAL2D keeps the conjugate pair together so that the adaptive reconstruction remains real.
 
-A callable:
+![Angular spectrum and radial profiles of the p_x example](docs/source/_static/examples/px_spectrum.png)
 
-```python
-def psi(x, y):
-    r = np.hypot(x, y)
-    theta = np.arctan2(y, x)
-    return r**4 * np.exp(-0.7*r**2) * np.exp(4j*theta)
+The complete script is available in [`examples/px_orbital.py`](examples/px_orbital.py).
 
-dec = PolarDecomposition(psi, x, y)
-```
+## Inputs and outputs
 
-or a sampled array:
+PETAL2D accepts either an analytic callable or a two-dimensional array sampled on a uniform Cartesian grid.
 
-```python
-X, Y = np.meshgrid(x, y, indexing="ij")
-f_xy = np.exp(-(X**2 + Y**2))
-dec = PolarDecomposition(f_xy, x, y, interp_method="cubic")
-```
+The main decomposition provides:
 
-The sampled array must have shape `(len(x), len(y))` on strictly increasing, uniformly spaced Cartesian axes.
+- the complete discrete angular spectrum
+- retained harmonics selected by a requested reconstruction error
+- radial profiles $\rho_m(r)$
+- angular power fractions
+- measured and Parseval-predicted reconstruction errors
+- conjugate-pair selection for real fields
+- `domain_consistency` for the analyzed polar disk
+- angular Nyquist information
+- radial power-support and amplitude-support radii
+- `cutoff_radius` as the stricter radial-extent diagnostic
 
-## What can PETAL2D be used for?
+Reconstruction can use the retained spectrum, the complete spectrum, or an explicit set of angular harmonics.
 
-PETAL2D is useful whenever a **localized 2D scalar or complex scalar field has meaningful angular structure about a center**. Potential applications include:
+## Applications
 
-- **Atomic and molecular orbital analysis in planar models.** Resolve $s$-, $p$-, $d$-like and mixed angular content while keeping radial profiles.
-- **Wannier and localized crystal orbitals.** Quantify local angular character, crystal-field mixing, and symmetry-compatible harmonics around a chosen atomic or moiré site.
-- **Defect, impurity, and bound-state wavefunctions.** Compare angular channels and localization radii between states or control parameters.
-- **Moiré electronic states.** Characterize local orbital textures around high-symmetry stacking regions without reducing the result to a single shape label.
-- **Complex order parameters and vortices.** Analyze phase-winding channels of a complex scalar field; a pure $e^{im\theta}$ vortex appears as a single complex harmonic.
-- **Charge, probability, or scalar spin-density anisotropy.** Measure spatial angular structure of real observables. For vector spin textures, decompose components separately.
-- **Excitonic relative-coordinate wavefunctions.** Resolve angular channels in an effectively two-dimensional electron-hole relative coordinate.
-- **Localized photonic, phononic, acoustic, or PDE eigenmodes.** Decompose scalar mode profiles centered on a resonator, defect, or localization center.
-- **Scientific imaging and simulation descriptors.** Compress or compare localized angular morphology when the field can be interpreted as a scalar intensity or signed scalar map.
+PETAL2D is intended for localized 2D fields whose angular structure is meaningful about a chosen center. Examples include:
 
-The harmonic index must be interpreted according to the input. For a complex wavefunction, $m$ is an $L_z/\hbar$ angular basis label. For a density $|\psi|^2$, it describes density anisotropy and cannot recover phase information discarded by the modulus square.
+- planar atomic and molecular orbitals
+- Wannier and other localized crystal orbitals
+- defect, impurity, and bound-state wavefunctions
+- localized moiré states around high-symmetry regions
+- complex order parameters and vortex states
+- charge, probability, and scalar spin-density anisotropy
+- excitonic relative-coordinate wavefunctions
+- localized photonic, phononic, acoustic, and PDE eigenmodes
+- angular descriptors of localized simulation or image data
 
-## Key diagnostics
+For a complex wavefunction, the harmonic index $m$ labels the planar $L_z/\hbar$ sector about the chosen origin. For a density such as $|\psi|^2$, the same decomposition describes angular morphology and does not recover the phase removed by taking the modulus square.
 
-### Expansion origin
-
-The default is the $L^2$ power centroid,
-
-$$
-\mathbf r_c=\frac{\int \mathbf r|f|^2d^2r}{\int|f|^2d^2r},
-$$
-
-or supply a known center directly:
-
-```python
-dec = PolarDecomposition(f_xy, x, y, origin=(x0, y0))
-```
-
-### Domain consistency
-
-$$
-\mathrm{domain\_consistency}=
-\frac{\int_{\Omega_{\rm polar}}|f|^2d^2r}
-{\int_{\Omega_{\rm Cartesian}}|f|^2d^2r}.
-$$
-
-A value near one means the analyzed polar disk contains essentially the same $L^2$ weight as the supplied Cartesian domain. It measures captured weight, not pointwise interpolation accuracy.
-
-### Adaptive reconstruction
-
-```python
-f_adaptive = dec.reconstruct()
-f_all = dec.reconstruct("all")
-f_selected = dec.reconstruct([0, 3, -3])
-
-print(dec.reconstruction_error())
-```
-
-For real input, automatic selection keeps conjugate pairs together. Explicit user-selected subsets are reconstructed exactly as requested.
-
-### Radial cutoff
-
-For every retained $m$:
-
-```python
-dec.radial_power_support_radius[m]
-dec.radial_amplitude_support_radius[m]
-dec.cutoff_radius[m]
-```
-
-The final cutoff radius is the larger of an integrated-power criterion and an outermost relative-amplitude criterion. It is a diagnostic of radial extent; **PETAL2D never truncates the reconstruction at this radius.**
+PETAL2D is not a replacement for a Cartesian FFT, a three-dimensional spherical-harmonic expansion, a vector or tensor harmonic decomposition, or a crystallographic point-group analysis.
 
 ## Documentation
 
-The documentation is organized like a Scientific Python project rather than a long README:
+- [Getting started](docs/source/getting_started.md)
+- [User guide](docs/source/user_guide/index.md)
+- [API reference](docs/source/reference/index.rst)
+- [Guided examples](docs/source/examples/index.md)
+- [Validation and benchmarks](docs/source/validation/index.md)
+- [Theory](docs/source/theory/index.md)
+- [Proofs](docs/source/theory/proofs.md)
 
-- [**Getting started**](docs/source/getting_started.md) — first decomposition and core workflow;
-- [**User guide**](docs/source/user_guide/index.md) — inputs, centering, parameter choice, diagnostics, applications, plotting, and numerical failure modes;
-- [**Theory**](docs/source/theory/index.md) — Fourier conventions, physical interpretation, Nyquist structure, and radial cutoff;
-- [**Full proofs**](docs/source/theory/proofs.md) — Parseval, adaptive error certificate, real-field conjugacy, rotation/translation covariance, $C_n$ selection rules, aliasing, and domain consistency;
-- [**Guided examples**](docs/source/examples/index.md) — QHO, pure angular momentum, real $p/d$ orbitals, $C_3$ field, automatic centering, sampled data, adaptive compression, and a Wannier workflow;
-- [**Validation and benchmarks**](docs/source/validation/index.md) — accuracy, convergence, runtime, and memory methodology;
-- [**API reference**](docs/source/reference/index.rst) — exact public class and method documentation.
-
-Build locally with:
+Build the documentation locally with
 
 ```bash
-python -m pip install -e ".[docs]"
 python -m sphinx -W --keep-going -b html docs/source docs/_build/html
 ```
 
-## Mathematical guarantees and numerical caveats
+## Validation and tests
 
-For the computed discrete angular spectrum, orthogonality gives the adaptive reconstruction error directly from omitted power. PETAL2D also evaluates the weighted error independently and the validation suite checks their agreement.
-
-Finite Cartesian domains, finite `Nr`, finite `Ntheta`, and Cartesian-to-polar interpolation remain numerical approximations. Weak harmonics in sampled data should therefore be convergence-tested before being interpreted as physical symmetry breaking.
-
-## Validation and benchmarks
-
-Run mathematical tests:
+Run the test suite with
 
 ```bash
-python -m pytest -v
+python -m pytest -q
 ```
 
-Reproduce numerical validation and performance studies:
+The numerical validation suite covers interpolation accuracy, radial convergence, angular sampling and aliasing, real-field Nyquist behavior, and adaptive truncation. The benchmark suite records runtime and peak-memory measurements separately from the validation studies.
+
+Run the full validation and benchmark workflow with
 
 ```bash
 ./tools/run_full_validation_and_benchmarks.sh
 ```
 
-The compute stages write JSON first; plotting scripts read the saved JSON. Benchmark metadata records package/dependency versions and relevant hardware/runtime information.
-
-## Examples
-
-```bash
-python examples/qho_ground_state.py
-python examples/angular_momentum_state.py
-python examples/px_orbital.py
-python examples/dx2_y2_orbital.py
-python examples/c3_localized_field.py
-python examples/shifted_orbital_centroid.py
-```
-
-## Project scope
-
-PETAL2D currently targets single-center, two-dimensional scalar fields on uniform Cartesian grids. It does not currently provide 3D spherical harmonics, coupled vector/tensor decomposition, nonuniform-grid interpolation, or automatic crystallographic point-group classification.
+See [`validation/README.md`](validation/README.md) and [`benchmarks/README.md`](benchmarks/README.md) for the individual studies.
 
 ## Citation
 
-PETAL2D includes `CITATION.cff`. A versioned Zenodo DOI will be added with the first archived release. If PETAL2D contributes materially to a publication, cite the archived software version used for the calculation.
+Citation metadata are provided in [`CITATION.cff`](CITATION.cff). A versioned DOI will be added with the first archived release.
 
 ## Contributing
 
-Bug reports, mathematical test cases, documentation improvements, physically motivated examples, and carefully validated numerical improvements are welcome. See `docs/source/development/contributing.md` and `CONTRIBUTING.md`.
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) and the [development guide](docs/source/development/index.md).
 
 ## License
 
-MIT License.
+PETAL2D is distributed under the MIT License. See [`LICENSE`](LICENSE).
 
-Developed by **Alex Santacruz**, 2DQMAT Research @ IF-UNAM.
+Alex Santacruz, 2DQMAT Research @ IF-UNAM
