@@ -54,6 +54,7 @@ docs = [
 
 [project.urls]
 Homepage = "https://github.com/QuantumArtificer/petal2d"
+Documentation = "https://quantumartificer.github.io/petal2d/"
 Repository = "https://github.com/QuantumArtificer/petal2d"
 Issues = "https://github.com/QuantumArtificer/petal2d/issues"
 
