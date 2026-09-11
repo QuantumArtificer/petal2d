@@ -3,13 +3,14 @@ include LICENSE
 include CHANGELOG.md
 include CITATION.cff
 include paper.md
-include run_full_validation_and_benchmarks.sh
+include CONTRIBUTING.md
+include tools/run_full_validation_and_benchmarks.sh
+recursive-include tools *.py *.sh
 recursive-include examples *.py
 recursive-include validation *.py *.md
 recursive-include benchmarks *.py *.md
 recursive-include tests *.py
-prune validation/results/figures
-global-exclude __pycache__ *.py[cod]
-prune benchmarks/results/figures
-include CONTRIBUTING.md
 recursive-include docs *.md *.rst *.py Makefile *.png *.svg *.css
+prune validation/results/figures
+prune benchmarks/results/figures
+global-exclude __pycache__ *.py[cod]

@@ -2,7 +2,7 @@
 
 All notable changes to PETAL2D will be documented in this file.
 
-## [0.1.0] - Unreleased
+## [0.1.0] - 2026-09-11
 - Add a full Sphinx/PyData documentation site with pedagogical getting-started,
   narrative user guide, theory, formal proofs, guided physics examples,
   validation/performance documentation, glossary, limitations, and API reference.
@@ -41,7 +41,6 @@ All notable changes to PETAL2D will be documented in this file.
   resolution/Nyquist, and adaptive-truncation studies with JSON-first outputs.
 - Replace legacy performance scripts with reproducible runtime and fresh-process
   peak-RSS benchmarks, each with separate JSON plotting scripts.
-- Rank retained angular-power bars categorically from greatest to least power, so sparse or high-|m| spectra do not create empty linear harmonic axes.
 - Rename the final combined radial diagnostic from `radial_support_radius` to `cutoff_radius`; the two underlying power- and amplitude-support radii remain explicit.
 
 ### Added
@@ -53,7 +52,6 @@ All notable changes to PETAL2D will be documented in this file.
 - Public reconstruction, reconstruction-error, and spectrum-table APIs.
 - Mathematical test suite, JSON validation workflows, physics-motivated examples,
   and reproducible benchmark utilities.
-
 - Consistent physics-example reporting and plotting; clarified radial-cutoff diagnostics.
 - Replaced the ambiguous radial-cutoff API with explicit power-tail and
   relative-amplitude support diagnostics; the plotted cutoff radius is
