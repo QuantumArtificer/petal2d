@@ -2,6 +2,7 @@
 
 [![tests](https://github.com/QuantumArtificer/petal2d/actions/workflows/tests.yml/badge.svg)](https://github.com/QuantumArtificer/petal2d/actions/workflows/tests.yml)
 [![Documentation](https://github.com/QuantumArtificer/petal2d/actions/workflows/docs.yml/badge.svg)](https://quantumartificer.github.io/petal2d/)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22715741.svg)](https://doi.org/10.5281/zenodo.22715741)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 PETAL2D (Polar Expansion Toolkit for Atomic Orbitals and Localized Fields in 2D) decomposes localized two-dimensional real or complex scalar fields into polar angular harmonics while retaining their radial structure.
@@ -22,7 +23,13 @@ The angular channels can then be ranked by power and used to construct controlle
 
 ## Installation
 
-Install a development checkout with
+Install the published package from PyPI with
+
+```bash
+python -m pip install petal2d
+```
+
+For a development checkout:
 
 ```bash
 git clone https://github.com/QuantumArtificer/petal2d.git
@@ -153,7 +160,9 @@ See [`validation/README.md`](validation/README.md) and [`benchmarks/README.md`](
 
 ## Citation
 
-Citation metadata are provided in [`CITATION.cff`](CITATION.cff). A versioned DOI will be added with the first archived release.
+PETAL2D 0.1.0 is archived on Zenodo with DOI [10.5281/zenodo.22715741](https://doi.org/10.5281/zenodo.22715741).
+
+Citation metadata are provided in [`CITATION.cff`](CITATION.cff).
 
 ## Contributing
 
