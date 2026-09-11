@@ -1,7 +1,7 @@
 # PETAL2D
 
 [![tests](https://github.com/QuantumArtificer/petal2d/actions/workflows/tests.yml/badge.svg)](https://github.com/QuantumArtificer/petal2d/actions/workflows/tests.yml)
-[![Documentation](https://github.com/QuantumArtificer/petal2d/actions/workflows/docs.yml/badge.svg)](https://github.com/QuantumArtificer/petal2d/actions/workflows/docs.yml)
+[![Documentation](https://github.com/QuantumArtificer/petal2d/actions/workflows/docs.yml/badge.svg)](https://quantumartificer.github.io/petal2d/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 PETAL2D (Polar Expansion Toolkit for Atomic Orbitals and Localized Fields in 2D) decomposes localized two-dimensional real or complex scalar fields into polar angular harmonics while retaining their radial structure.
@@ -117,13 +117,15 @@ PETAL2D is not a replacement for a Cartesian FFT, a three-dimensional spherical-
 
 ## Documentation
 
-- [Getting started](docs/source/getting_started.md)
-- [User guide](docs/source/user_guide/index.md)
-- [API reference](docs/source/reference/index.rst)
-- [Guided examples](docs/source/examples/index.md)
-- [Validation and benchmarks](docs/source/validation/index.md)
-- [Theory](docs/source/theory/index.md)
-- [Proofs](docs/source/theory/proofs.md)
+The documentation is available at [quantumartificer.github.io/petal2d](https://quantumartificer.github.io/petal2d/).
+
+- [Getting started](https://quantumartificer.github.io/petal2d/getting_started.html)
+- [User guide](https://quantumartificer.github.io/petal2d/user_guide/)
+- [API reference](https://quantumartificer.github.io/petal2d/reference/)
+- [Guided examples](https://quantumartificer.github.io/petal2d/examples/)
+- [Validation and benchmarks](https://quantumartificer.github.io/petal2d/validation/)
+- [Theory](https://quantumartificer.github.io/petal2d/theory/)
+- [Proofs](https://quantumartificer.github.io/petal2d/theory/proofs.html)
 
 Build the documentation locally with
 
@@ -155,7 +157,7 @@ Citation metadata are provided in [`CITATION.cff`](CITATION.cff). A versioned DO
 
 ## Contributing
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) and the [development guide](docs/source/development/index.md).
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) and the [development guide](https://quantumartificer.github.io/petal2d/development/).
 
 ## License
 
