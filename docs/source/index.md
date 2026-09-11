@@ -51,6 +51,10 @@ The same decomposition is also useful as a compact angular basis in problems wit
 
 PETAL2D does not replace a Cartesian FFT, a 3D spherical-harmonic expansion, a vector or tensor harmonic decomposition, or a full crystallographic point-group analysis. See {doc}`reference/limitations` for the package scope.
 
+## Release archive
+
+PETAL2D 0.1.0 is archived on Zenodo with DOI [10.5281/zenodo.22715741](https://doi.org/10.5281/zenodo.22715741).
+
 ```{toctree}
 :maxdepth: 2
 :hidden:
