@@ -2,6 +2,10 @@
 
 All notable changes to PETAL2D will be documented in this file.
 
+## Unreleased
+- Add the Zenodo DOI and archive links to project metadata and documentation.
+- Update installation guidance for the published PyPI package.
+
 ## [0.1.0] - 2026-09-11
 - Add a full Sphinx/PyData documentation site with pedagogical getting-started,
   narrative user guide, theory, formal proofs, guided physics examples,
